@@ -39,6 +39,9 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: WebGL
+          buildsPath: CIBuilds
+          buildName: build
+          allowDirtyBuild: true
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -46,8 +49,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload entire repository
-          path: "./build"
+          path: CIBuilds/WebGL/build
 
       - name: Deploy to GitHub Pages
         id: deployment
