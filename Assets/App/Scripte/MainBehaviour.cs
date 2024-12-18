@@ -1,30 +1,60 @@
-using System;
 using System.Threading;
-using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MainBehaviour : MonoBehaviour
 {
     [SerializeField]
-    private TextMeshProUGUI logText;
+    private LogText logText;
 
-    private async void Start()
+    [SerializeField]
+    private Button buttonAwaitable;
+
+    [SerializeField]
+    private Button buttonTask;
+
+    [SerializeField]
+    private Button buttonJsAwaitable;
+
+    private CancellationTokenSource _tokenSource;
+
+    private void Start()
     {
-        try
-        {
-            logText.text = await GetStringAsync(5);
-        }
-        catch (Exception e)
-        {
-            Debug.LogError(e);
-        }
+        _tokenSource = new CancellationTokenSource();
+
+        buttonAwaitable.onClick.AddListener(OnClick_Awaitable);
+        buttonTask.onClick.AddListener(OnClick_Task);
+        buttonJsAwaitable.onClick.AddListener(OnClick_JS);
     }
 
-    private static async Awaitable<string> GetStringAsync(int delay, CancellationToken token = default)
+    private void OnDestroy()
     {
-        token.ThrowIfCancellationRequested();
+        _tokenSource?.Dispose();
+        _tokenSource = null;
 
-        await Awaitable.WaitForSecondsAsync(delay, token);
-        return "Hello!";
+        buttonAwaitable.onClick.RemoveListener(OnClick_Awaitable);
+        buttonTask.onClick.RemoveListener(OnClick_Task);
+        buttonJsAwaitable.onClick.RemoveListener(OnClick_JS);
+    }
+
+    private async void OnClick_Awaitable()
+    {
+        logText.Log("Click");
+        var str = await AsyncFunctions.GetStringAwaitableAsync("Awaitable!", _tokenSource.Token);
+        logText.Log(str);
+    }
+
+    private async void OnClick_Task()
+    {
+        logText.Log("Click");
+        var str = await AsyncFunctions.GetStringTaskAsync("Task!", _tokenSource.Token);
+        logText.Log(str);
+    }
+
+    private async void OnClick_JS()
+    {
+        logText.Log("Click");
+        var str = await AsyncFunctions.GetStringAwaitableJSAsync("JS Awaitable!", _tokenSource.Token);
+        logText.Log(str);
     }
 }
