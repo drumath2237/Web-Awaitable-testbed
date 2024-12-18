@@ -10,13 +10,13 @@ public static class AsyncFunctions
 {
     public static async Awaitable<string> GetStringAwaitableAsync(string str, CancellationToken token)
     {
-        await Awaitable.WaitForSecondsAsync(5f, token);
+        await Awaitable.WaitForSecondsAsync(3f, token);
         return str;
     }
 
     public static async Task<string> GetStringTaskAsync(string str, CancellationToken token)
     {
-        await Task.Delay(5000, token);
+        await Task.Delay(3000, token);
         return str;
     }
 

@@ -16,6 +16,9 @@ public class MainBehaviour : MonoBehaviour
     [SerializeField]
     private Button buttonJsAwaitable;
 
+    [SerializeField]
+    private Button buttonClear;
+
     private CancellationTokenSource _tokenSource;
 
     private void Start()
@@ -25,6 +28,7 @@ public class MainBehaviour : MonoBehaviour
         buttonAwaitable.onClick.AddListener(OnClick_Awaitable);
         buttonTask.onClick.AddListener(OnClick_Task);
         buttonJsAwaitable.onClick.AddListener(OnClick_JS);
+        buttonClear.onClick.AddListener(OnClick_Clear);
     }
 
     private void OnDestroy()
@@ -35,6 +39,7 @@ public class MainBehaviour : MonoBehaviour
         buttonAwaitable.onClick.RemoveListener(OnClick_Awaitable);
         buttonTask.onClick.RemoveListener(OnClick_Task);
         buttonJsAwaitable.onClick.RemoveListener(OnClick_JS);
+        buttonClear.onClick.RemoveListener(OnClick_Clear);
     }
 
     private async void OnClick_Awaitable()
@@ -56,5 +61,10 @@ public class MainBehaviour : MonoBehaviour
         logText.Log("Click");
         var str = await AsyncFunctions.GetStringAwaitableJSAsync("JS Awaitable!", _tokenSource.Token);
         logText.Log(str);
+    }
+
+    private void OnClick_Clear()
+    {
+        logText.ClearLog();
     }
 }
